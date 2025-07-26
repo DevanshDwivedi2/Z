@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { 
   Star, 
   Clock, 
@@ -11,7 +12,8 @@ import {
 } from 'lucide-react';
 
 const RestaurantListings = () => {
-  const [selectedFilters, setSelectedFilters] = useState({
+    const navigate = useNavigate();
+    const [selectedFilters, setSelectedFilters] = useState({
     offers: false,
     rating: '',
     petFriendly: false,
@@ -644,20 +646,36 @@ const RestaurantListings = () => {
         }
       `}</style>
 
-      {/* Header */}
-      <header className="app-header">
-        <div className="header-container">
-          <div className="header-brand">
-            <div className="brand-icon">🍕</div>
-            <h1 className="brand-title">FoodieExpress</h1>
-          </div>
-          <div className="header-location">
-            <MapPin size={16} />
-            <span>Allahabad</span>
-          </div>
-        </div>
-      </header>
-
+{/* Header */}
+<header className="app-header">
+  <div className="header-container">
+    <div className="header-brand">
+      <div className="brand-icon">🍕</div>
+      <h1 className="brand-title">FoodieExpress</h1>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div className="header-location">
+        <MapPin size={16} />
+        <span>Allahabad</span>
+      </div>
+      {/* ADD THIS LOGOUT BUTTON */}
+      <button 
+        onClick={() => navigate('/auth')}
+        style={{
+          padding: '0.5rem 1rem',
+          background: 'rgba(255, 107, 53, 0.1)',
+          border: '1px solid rgba(255, 107, 53, 0.3)',
+          borderRadius: '8px',
+          color: '#ff6b35',
+          cursor: 'pointer',
+          fontSize: '0.875rem'
+        }}
+      >
+        Sign Out
+      </button>
+    </div>
+  </div>
+</header>
       <div className="main-container">
         {/* Search and Filters */}
         <div className="search-filter-section">
