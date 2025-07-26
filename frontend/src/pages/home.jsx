@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
   Star, 
   Clock, 
@@ -10,21 +9,6 @@ import {
   ChevronDown,
   Truck,
 } from 'lucide-react';
-export function Home() {
-  const navigate = useNavigate();
-  
-  return (
-    <div className="flex flex-col items-center gap-4 mt-10">
-      <h1 className="text-2xl font-bold">Welcome to Home Page</h1>
-      <button
-        onClick={() => navigate('/auth')}
-        className="px-4 py-2 bg-blue-500 text-white rounded"
-      >
-        Go to Login / Signup
-      </button>
-    </div>
-  );
-}
 
 const RestaurantListings = () => {
   const [selectedFilters, setSelectedFilters] = useState({
@@ -165,197 +149,603 @@ const RestaurantListings = () => {
   });
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="restaurant-app">
       <style>{`
-        .gradient-bg {
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .restaurant-app {
+          min-height: 100vh;
+          background: #0a0a0a;
+          color: white;
+        }
+
+        /* Header Styles */
+        .app-header {
+          position: sticky;
+          top: 0;
+          z-index: 50;
+          background: rgba(10, 10, 10, 0.95);
+          backdrop-filter: blur(20px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-container {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .header-brand {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .brand-icon {
+          width: 40px;
+          height: 40px;
           background: linear-gradient(135deg, #ff6b35, #ec4899);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.25rem;
         }
-        
-        .glass-effect {
+
+        .brand-title {
+          font-size: 1.5rem;
+          font-weight: bold;
+        }
+
+        .header-location {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: #9ca3af;
+          font-size: 0.875rem;
+        }
+
+        /* Main Container */
+        .main-container {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 1.5rem;
+        }
+
+        /* Search and Filter Section */
+        .search-filter-section {
+          margin-bottom: 2rem;
+        }
+
+        .search-container {
+          position: relative;
+          margin-bottom: 1.5rem;
+        }
+
+        .search-icon {
+          position: absolute;
+          left: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #9ca3af;
+        }
+
+        .search-input {
+          width: 100%;
+          padding: 1rem 1rem 1rem 3rem;
           background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .restaurant-card {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(20px);
-          transition: all 0.3s ease;
-        }
-        
-        .restaurant-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
-          border-color: rgba(255, 107, 53, 0.3);
-        }
-        
-        .filter-btn {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 16px;
+          color: white;
+          font-size: 1rem;
           backdrop-filter: blur(10px);
           transition: all 0.3s ease;
         }
-        
+
+        .search-input::placeholder {
+          color: #9ca3af;
+        }
+
+        .search-input:focus {
+          outline: none;
+          border-color: #ff6b35;
+          box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        /* Filter Buttons */
+        .filter-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          margin-bottom: 1rem;
+        }
+
+        .filter-btn {
+          padding: 0.5rem 1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 12px;
+          color: white;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          backdrop-filter: blur(10px);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
         .filter-btn:hover {
           background: rgba(255, 107, 53, 0.1);
           border-color: #ff6b35;
         }
-        
+
         .filter-btn.active {
           background: linear-gradient(135deg, #ff6b35, #ec4899);
           border-color: transparent;
           color: white;
         }
-        
-        .search-input {
+
+        .filter-select {
+          position: relative;
+        }
+
+        .filter-dropdown {
+          padding: 0.5rem 2rem 0.5rem 1rem;
           background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 12px;
+          color: white;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          appearance: none;
           backdrop-filter: blur(10px);
         }
-        
-        .search-input:focus {
-          border-color: #ff6b35;
-          box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+
+        .filter-dropdown option {
+          background: #1a1a1a;
+          color: white;
         }
-        
+
+        .dropdown-icon {
+          position: absolute;
+          right: 0.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+        }
+
+        .results-count {
+          color: #9ca3af;
+          font-size: 0.875rem;
+        }
+
+        /* Restaurant Grid */
+        .restaurant-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .restaurant-card {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+          overflow: hidden;
+          backdrop-filter: blur(20px);
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        .restaurant-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+          border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        .card-image {
+          position: relative;
+          height: 192px;
+          background: linear-gradient(135deg, #374151, #1f2937);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .card-image-placeholder {
+          font-size: 4rem;
+          opacity: 0.5;
+        }
+
         .discount-badge {
+          position: absolute;
+          top: 0.75rem;
+          left: 0.75rem;
           background: linear-gradient(135deg, #ff6b35, #ec4899);
+          color: white;
+          font-size: 0.75rem;
+          font-weight: bold;
+          padding: 0.25rem 0.5rem;
+          border-radius: 8px;
           animation: pulse 2s infinite;
         }
-        
+
         @keyframes pulse {
           0%, 100% { transform: scale(1); }
           50% { transform: scale(1.05); }
         }
-        
+
         .favorite-btn {
+          position: absolute;
+          top: 0.75rem;
+          right: 0.75rem;
+          padding: 0.5rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          color: #9ca3af;
+          cursor: pointer;
           transition: all 0.3s ease;
+          backdrop-filter: blur(10px);
         }
-        
+
         .favorite-btn:hover {
           transform: scale(1.1);
         }
-        
+
         .favorite-btn.active {
           color: #ff6b35;
         }
-        
+
+        .closed-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .closed-badge {
+          color: white;
+          font-weight: 600;
+          background: #dc2626;
+          padding: 0.25rem 0.75rem;
+          border-radius: 8px;
+        }
+
+        .card-content {
+          padding: 1rem;
+        }
+
+        .card-header {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+          font-weight: bold;
+          font-size: 1.125rem;
+          color: white;
+          line-height: 1.3;
+          flex: 1;
+        }
+
         .rating-badge {
           background: linear-gradient(135deg, #10b981, #059669);
+          padding: 0.25rem 0.5rem;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: white;
+          margin-left: 0.5rem;
+          flex-shrink: 0;
         }
-        
-        .closed-overlay {
-          background: rgba(0, 0, 0, 0.7);
+
+        .card-cuisine {
+          color: #9ca3af;
+          font-size: 0.875rem;
+          margin-bottom: 0.75rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .card-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.25rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .tag {
+          background: #374151;
+          color: #d1d5db;
+          font-size: 0.75rem;
+          padding: 0.25rem 0.5rem;
+          border-radius: 6px;
+        }
+
+        .card-location {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: #9ca3af;
+          font-size: 0.875rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .location-text {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          flex: 1;
+        }
+
+        .location-separator {
+          color: #6b7280;
+        }
+
+        .distance {
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        .card-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 0.875rem;
+        }
+
+        .footer-left {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .price {
+          color: white;
+          font-weight: 500;
+        }
+
+        .delivery-time {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: #9ca3af;
+        }
+
+        .delivery-info {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: #ff6b35;
+        }
+
+        .delivery-free {
+          font-size: 0.75rem;
+        }
+
+        .card-features {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.25rem;
+          margin-top: 0.75rem;
+        }
+
+        .feature-tag {
+          font-size: 0.75rem;
+          color: #ff6b35;
+          background: rgba(255, 107, 53, 0.1);
+          padding: 0.25rem 0.5rem;
+          border-radius: 6px;
+        }
+
+        /* No Results */
+        .no-results {
+          text-align: center;
+          padding: 4rem 0;
+        }
+
+        .no-results-icon {
+          font-size: 4rem;
+          margin-bottom: 1rem;
+          opacity: 0.5;
+        }
+
+        .no-results-title {
+          font-size: 1.25rem;
+          font-weight: bold;
+          margin-bottom: 0.5rem;
+        }
+
+        .no-results-text {
+          color: #9ca3af;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .main-container {
+            padding: 1rem;
+          }
+
+          .header-container {
+            padding: 0.75rem;
+          }
+
+          .brand-title {
+            font-size: 1.25rem;
+          }
+
+          .restaurant-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+
+          .filter-container {
+            gap: 0.5rem;
+          }
+
+          .filter-btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+          }
+
+          .card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
+
+          .rating-badge {
+            margin-left: 0;
+          }
+
+          .footer-left {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .header-container {
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+          }
+
+          .search-input {
+            padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+          }
+
+          .search-icon {
+            left: 0.75rem;
+          }
         }
       `}</style>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 glass-effect border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-xl">
-                🍕
-              </div>
-              <h1 className="text-2xl font-bold">FoodieExpress</h1>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <MapPin size={16} />
-              <span>Allahabad</span>
-            </div>
+      <header className="app-header">
+        <div className="header-container">
+          <div className="header-brand">
+            <div className="brand-icon">🍕</div>
+            <h1 className="brand-title">FoodieExpress</h1>
+          </div>
+          <div className="header-location">
+            <MapPin size={16} />
+            <span>Allahabad</span>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="main-container">
         {/* Search and Filters */}
-        <div className="mb-8">
+        <div className="search-filter-section">
           {/* Search Bar */}
-          <div className="relative mb-6">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <div className="search-container">
+            <Search className="search-icon" size={20} />
             <input
               type="text"
               placeholder="Search for restaurants or cuisines..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 search-input rounded-2xl text-white placeholder-gray-400 focus:outline-none"
+              className="search-input"
             />
           </div>
 
           {/* Filter Buttons */}
-          <div className="flex flex-wrap gap-3 mb-4">
-            <button className="filter-btn px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-medium">
+          <div className="filter-container">
+            <button className="filter-btn">
               <Filter size={16} />
               Filters
             </button>
             
             <button 
               onClick={() => handleFilterChange('offers', !selectedFilters.offers)}
-              className={`filter-btn px-4 py-2 rounded-xl text-sm font-medium ${selectedFilters.offers ? 'active' : ''}`}
+              className={`filter-btn ${selectedFilters.offers ? 'active' : ''}`}
             >
               Offers
             </button>
             
-            <div className="relative">
+            <div className="filter-select">
               <select 
                 value={selectedFilters.rating}
                 onChange={(e) => handleFilterChange('rating', e.target.value)}
-                className="filter-btn px-4 py-2 rounded-xl text-sm font-medium appearance-none pr-8 cursor-pointer"
+                className="filter-dropdown"
               >
                 <option value="">Rating</option>
                 <option value="4.5">4.5+</option>
                 <option value="4.0">4.0+</option>
                 <option value="3.5">3.5+</option>
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none" size={16} />
+              <ChevronDown className="dropdown-icon" size={16} />
             </div>
             
             <button 
               onClick={() => handleFilterChange('petFriendly', !selectedFilters.petFriendly)}
-              className={`filter-btn px-4 py-2 rounded-xl text-sm font-medium ${selectedFilters.petFriendly ? 'active' : ''}`}
+              className={`filter-btn ${selectedFilters.petFriendly ? 'active' : ''}`}
             >
               Pet Friendly
             </button>
             
             <button 
               onClick={() => handleFilterChange('outdoorSeating', !selectedFilters.outdoorSeating)}
-              className={`filter-btn px-4 py-2 rounded-xl text-sm font-medium ${selectedFilters.outdoorSeating ? 'active' : ''}`}
+              className={`filter-btn ${selectedFilters.outdoorSeating ? 'active' : ''}`}
             >
               Outdoor Seating
             </button>
             
             <button 
               onClick={() => handleFilterChange('servesAlcohol', !selectedFilters.servesAlcohol)}
-              className={`filter-btn px-4 py-2 rounded-xl text-sm font-medium ${selectedFilters.servesAlcohol ? 'active' : ''}`}
+              className={`filter-btn ${selectedFilters.servesAlcohol ? 'active' : ''}`}
             >
               Serves Alcohol
             </button>
             
             <button 
               onClick={() => handleFilterChange('openNow', !selectedFilters.openNow)}
-              className={`filter-btn px-4 py-2 rounded-xl text-sm font-medium ${selectedFilters.openNow ? 'active' : ''}`}
+              className={`filter-btn ${selectedFilters.openNow ? 'active' : ''}`}
             >
               Open Now
             </button>
           </div>
 
-          <p className="text-gray-400 text-sm">
+          <p className="results-count">
             {filteredRestaurants.length} restaurants found in Allahabad
           </p>
         </div>
 
         {/* Restaurant Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="restaurant-grid">
           {filteredRestaurants.map((restaurant) => (
-            <div key={restaurant.id} className="restaurant-card rounded-2xl overflow-hidden relative">
+            <div key={restaurant.id} className="restaurant-card">
               {/* Restaurant Image */}
-              <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                <div className="text-6xl opacity-50">🍽️</div>
+              <div className="card-image">
+                <div className="card-image-placeholder">🍽️</div>
                 
                 {/* Discount Badge */}
                 {restaurant.discount && (
-                  <div className="absolute top-3 left-3 discount-badge text-white text-xs font-bold px-2 py-1 rounded-lg">
+                  <div className="discount-badge">
                     {restaurant.discount}
                   </div>
                 )}
@@ -363,68 +753,68 @@ const RestaurantListings = () => {
                 {/* Favorite Button */}
                 <button 
                   onClick={() => toggleFavorite(restaurant.id)}
-                  className={`absolute top-3 right-3 favorite-btn p-2 glass-effect rounded-lg ${favorites.has(restaurant.id) ? 'active' : 'text-gray-400'}`}
+                  className={`favorite-btn ${favorites.has(restaurant.id) ? 'active' : ''}`}
                 >
                   <Heart size={18} fill={favorites.has(restaurant.id) ? 'currentColor' : 'none'} />
                 </button>
                 
                 {/* Closed Overlay */}
                 {!restaurant.isOpen && (
-                  <div className="absolute inset-0 closed-overlay flex items-center justify-center">
-                    <span className="text-white font-semibold bg-red-600 px-3 py-1 rounded-lg">CLOSED</span>
+                  <div className="closed-overlay">
+                    <span className="closed-badge">CLOSED</span>
                   </div>
                 )}
               </div>
 
               {/* Restaurant Info */}
-              <div className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-bold text-lg text-white leading-tight">{restaurant.name}</h3>
-                  <div className="rating-badge px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-semibold text-white ml-2">
+              <div className="card-content">
+                <div className="card-header">
+                  <h3 className="card-title">{restaurant.name}</h3>
+                  <div className="rating-badge">
                     <Star size={12} fill="currentColor" />
                     {restaurant.rating}
                   </div>
                 </div>
                 
-                <p className="text-gray-400 text-sm mb-3 line-clamp-1">{restaurant.cuisine}</p>
+                <p className="card-cuisine">{restaurant.cuisine}</p>
                 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-1 mb-3">
+                <div className="card-tags">
                   {restaurant.tags.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-md">
+                    <span key={index} className="tag">
                       {tag}
                     </span>
                   ))}
                 </div>
                 
                 {/* Location and Distance */}
-                <div className="flex items-center gap-1 text-gray-400 text-sm mb-3">
+                <div className="card-location">
                   <MapPin size={14} />
-                  <span className="truncate">{restaurant.location}</span>
-                  <span className="text-gray-600">•</span>
-                  <span className="whitespace-nowrap">{restaurant.distance}</span>
+                  <span className="location-text">{restaurant.location}</span>
+                  <span className="location-separator">•</span>
+                  <span className="distance">{restaurant.distance}</span>
                 </div>
                 
                 {/* Price and Delivery Time */}
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-4">
-                    <span className="text-white font-medium">{restaurant.price}</span>
-                    <div className="flex items-center gap-1 text-gray-400">
+                <div className="card-footer">
+                  <div className="footer-left">
+                    <span className="price">{restaurant.price}</span>
+                    <div className="delivery-time">
                       <Clock size={14} />
                       <span>{restaurant.deliveryTime}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 text-orange-400">
+                  <div className="delivery-info">
                     <Truck size={14} />
-                    <span className="text-xs">FREE</span>
+                    <span className="delivery-free">FREE</span>
                   </div>
                 </div>
                 
                 {/* Features */}
                 {restaurant.features.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-3">
+                  <div className="card-features">
                     {restaurant.features.map((feature, index) => (
-                      <span key={index} className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-md">
+                      <span key={index} className="feature-tag">
                         {feature}
                       </span>
                     ))}
@@ -437,10 +827,10 @@ const RestaurantListings = () => {
 
         {/* No Results */}
         {filteredRestaurants.length === 0 && (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4 opacity-50">🔍</div>
-            <h3 className="text-xl font-bold mb-2">No restaurants found</h3>
-            <p className="text-gray-400">Try adjusting your filters or search terms</p>
+          <div className="no-results">
+            <div className="no-results-icon">🔍</div>
+            <h3 className="no-results-title">No restaurants found</h3>
+            <p className="no-results-text">Try adjusting your filters or search terms</p>
           </div>
         )}
       </div>

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Phone, X, ShoppingBag, Star, MapPin } from 'lucide-react';
 
 const FoodDeliveryApp = () => {
+  const navigate = useNavigate();
   const [showAuth, setShowAuth] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -25,8 +27,10 @@ const FoodDeliveryApp = () => {
     e.preventDefault();
     if (isSignUp) {
       console.log('Sign up data:', formData);
+      navigate('/');
     } else {
       console.log('Sign in data:', { email: formData.email, password: formData.password });
+      navigate('/');
     }
     // Close modal after submission
     setShowAuth(false);
