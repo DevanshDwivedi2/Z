@@ -27,10 +27,10 @@ const FoodDeliveryApp = () => {
     e.preventDefault();
     if (isSignUp) {
       console.log('Sign up data:', formData);
-      navigate('/');
+      navigate('/rest');
     } else {
       console.log('Sign in data:', { email: formData.email, password: formData.password });
-      navigate('/');
+      navigate('/rest');
     }
     // Close modal after submission
     setShowAuth(false);

@@ -660,7 +660,7 @@ const RestaurantListings = () => {
       </div>
       {/* ADD THIS LOGOUT BUTTON */}
       <button 
-        onClick={() => navigate('/auth')}
+        onClick={() => navigate('/')}
         style={{
           padding: '0.5rem 1rem',
           background: 'rgba(255, 107, 53, 0.1)',
